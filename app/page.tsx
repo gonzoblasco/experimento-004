@@ -1,5 +1,4 @@
 import { prisma } from '@/lib/prisma'
-import { Nav } from '@/components/Nav'
 import { FinanceSnapshot, calcTotals, getDateReferences } from '@/lib/utils'
 import Link from 'next/link'
 
@@ -55,7 +54,7 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className='space-y-6 pb-24'>
+    <div className='space-y-6'>
       <header className='space-y-1'>
         <h1 className='text-2xl font-semibold'>Today&apos;s snapshot</h1>
         <p className='text-sm text-gray-600'>
@@ -165,8 +164,6 @@ export default async function DashboardPage() {
           ))}
         </div>
       </section>
-
-      <Nav />
     </div>
   )
 }

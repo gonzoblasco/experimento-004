@@ -45,11 +45,10 @@ const emptyDraft: DraftAppointment = {
 function formatDateInput(value: string) {
   const date = new Date(value)
   if (isNaN(date.getTime())) return ''
-function formatDateInput(value: string) {
-  const date = new Date(value);
-  if (isNaN(date.getTime())) return "";
-  const pad = (n: number) => `${n}`.padStart(2, "0");
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  const pad = (n: number) => `${n}`.padStart(2, '0')
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
+    date.getDate()
+  )}T${pad(date.getHours())}:${pad(date.getMinutes())}`
 }
 
 type AppointmentCardProps = {
@@ -117,7 +116,7 @@ function AppointmentCard({
               <span className='mb-1 block text-gray-600'>Start</span>
               <input
                 type='datetime-local'
-                className='w-full rounded-lg border border-gray-200 p-2'
+                className='w-full rounded-lg border-2 border-gray-300 bg-white p-2 hover:border-gray-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20'
                 value={formatDateInput(draft.start)}
                 onChange={(event) =>
                   setDraft((prev) => ({
@@ -131,7 +130,7 @@ function AppointmentCard({
               <span className='mb-1 block text-gray-600'>End</span>
               <input
                 type='datetime-local'
-                className='w-full rounded-lg border border-gray-200 p-2'
+                className='w-full rounded-lg border-2 border-gray-300 bg-white p-2 hover:border-gray-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20'
                 value={formatDateInput(draft.end)}
                 onChange={(event) =>
                   setDraft((prev) => ({
@@ -147,7 +146,7 @@ function AppointmentCard({
                 type='number'
                 min='0'
                 step='0.01'
-                className='w-full rounded-lg border border-gray-200 p-2'
+                className='w-full rounded-lg border-2 border-gray-300 bg-white p-2 hover:border-gray-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20'
                 value={draft.price}
                 onChange={(event) =>
                   setDraft((prev) => ({
@@ -160,7 +159,7 @@ function AppointmentCard({
             <label>
               <span className='mb-1 block text-gray-600'>Status</span>
               <select
-                className='w-full rounded-lg border border-gray-200 p-2'
+                className='w-full rounded-lg border-2 border-gray-300 bg-white p-2 hover:border-gray-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20'
                 value={draft.status}
                 onChange={(event) =>
                   setDraft((prev) => ({
@@ -193,7 +192,7 @@ function AppointmentCard({
               Save changes
             </button>
             <button
-              className='rounded-lg border border-gray-200 px-4 py-2'
+              className='rounded-lg border-2 border-gray-300 bg-white px-4 py-2 hover:border-gray-400 hover:bg-gray-50 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20'
               onClick={() => {
                 setDraft({
                   start: appointment.start,
@@ -226,7 +225,7 @@ function AppointmentCard({
       ) : (
         <div className='mt-3 flex gap-2'>
           <button
-            className='rounded-lg border border-gray-200 px-4 py-2 text-sm'
+            className='rounded-lg border-2 border-gray-300 bg-white px-4 py-2 text-sm hover:border-gray-400 hover:bg-gray-50 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20'
             onClick={() => setIsEditing(true)}
           >
             Edit
@@ -342,7 +341,7 @@ export function AppointmentBoard({
             <label className='text-sm'>
               <span className='mb-1 block text-gray-600'>Client</span>
               <select
-                className='w-full rounded-lg border border-gray-200 p-2'
+                className='w-full rounded-lg border-2 border-gray-300 bg-white p-2 hover:border-gray-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20'
                 value={draft.clientId}
                 onChange={(event) =>
                   setDraft((prev) => ({
@@ -362,7 +361,7 @@ export function AppointmentBoard({
             <label className='text-sm'>
               <span className='mb-1 block text-gray-600'>Service</span>
               <input
-                className='w-full rounded-lg border border-gray-200 p-2'
+                className='w-full rounded-lg border-2 border-gray-300 bg-white p-2 hover:border-gray-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20'
                 placeholder='Haircut, color, etc.'
                 value={draft.service}
                 onChange={(event) =>
@@ -374,7 +373,7 @@ export function AppointmentBoard({
               <span className='mb-1 block text-gray-600'>Start</span>
               <input
                 type='datetime-local'
-                className='w-full rounded-lg border border-gray-200 p-2'
+                className='w-full rounded-lg border-2 border-gray-300 bg-white p-2 hover:border-gray-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20'
                 value={draft.start}
                 onChange={(event) =>
                   setDraft((prev) => ({ ...prev, start: event.target.value }))
@@ -385,7 +384,7 @@ export function AppointmentBoard({
               <span className='mb-1 block text-gray-600'>End</span>
               <input
                 type='datetime-local'
-                className='w-full rounded-lg border border-gray-200 p-2'
+                className='w-full rounded-lg border-2 border-gray-300 bg-white p-2 hover:border-gray-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20'
                 value={draft.end}
                 onChange={(event) =>
                   setDraft((prev) => ({ ...prev, end: event.target.value }))
@@ -398,7 +397,7 @@ export function AppointmentBoard({
                 type='number'
                 min='0'
                 step='0.01'
-                className='w-full rounded-lg border border-gray-200 p-2'
+                className='w-full rounded-lg border-2 border-gray-300 bg-white p-2 hover:border-gray-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20'
                 value={draft.price}
                 onChange={(event) =>
                   setDraft((prev) => ({ ...prev, price: event.target.value }))
@@ -408,7 +407,7 @@ export function AppointmentBoard({
             <label className='text-sm'>
               <span className='mb-1 block text-gray-600'>Status</span>
               <select
-                className='w-full rounded-lg border border-gray-200 p-2'
+                className='w-full rounded-lg border-2 border-gray-300 bg-white p-2 hover:border-gray-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20'
                 value={draft.status}
                 onChange={(event) =>
                   setDraft((prev) => ({
