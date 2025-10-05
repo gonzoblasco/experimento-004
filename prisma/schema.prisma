@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Client {
+  id          Int           @id @default(autoincrement())
+  name        String
+  phone       String?
+  email       String?
+  notes       String?
+  appointments Appointment[]
+  createdAt   DateTime      @default(now())
+}
+
+model Appointment {
+  id          Int       @id @default(autoincrement())
+  service     String
+  start       DateTime
+  end         DateTime
+  price       Decimal    @db.Decimal(10, 2)
+  status      AppointmentStatus @default(SCHEDULED)
+  client      Client?    @relation(fields: [clientId], references: [id])
+  clientId    Int?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+}
+
+model FinanceEntry {
+  id        Int       @id @default(autoincrement())
+  type      FinanceType
+  amount    Decimal   @db.Decimal(10, 2)
+  category  String
+  notes     String?
+  occurredOn DateTime @default(now())
+  createdAt DateTime @default(now())
+}
+
+enum FinanceType {
+  INCOME
+  EXPENSE
+}
