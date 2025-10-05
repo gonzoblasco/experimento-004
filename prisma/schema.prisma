@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Client {
+  id          Int           @id @default(autoincrement())
+  name        String
+  phone       String?
+  email       String?
+  notes       String?
+  appointments Appointment[]
+  createdAt   DateTime      @default(now())
+}
+
+model Appointment {
+  id          Int       @id @default(autoincrement())
+  service     String
+  start       DateTime
+  end         DateTime
+  price       Float
+  status      String    @default("SCHEDULED")
+  client      Client?    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  clientId    Int?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model FinanceEntry {
+  id        Int       @id @default(autoincrement())
+  type      String
+  amount    Float
+  category  String
+  notes     String?
+  occurredOn DateTime @default(now())
+  createdAt DateTime @default(now())
+}
