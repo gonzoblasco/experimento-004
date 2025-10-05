@@ -45,10 +45,11 @@ const emptyDraft: DraftAppointment = {
 function formatDateInput(value: string) {
   const date = new Date(value)
   if (isNaN(date.getTime())) return ''
-  const pad = (n: number) => `${n}`.padStart(2, '0')
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
-    date.getDate()
-  )}T${pad(date.getHours())}:${pad(date.getMinutes())}`
+function formatDateInput(value: string) {
+  const date = new Date(value);
+  if (isNaN(date.getTime())) return "";
+  const pad = (n: number) => `${n}`.padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
 type AppointmentCardProps = {
