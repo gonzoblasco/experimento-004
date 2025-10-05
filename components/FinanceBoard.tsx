@@ -1,7 +1,12 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { FinanceEntry, calcTotals, getDateReferences } from '@/lib/utils'
+import {
+  FinanceEntry,
+  calcTotals,
+  getDateReferences,
+  formatDateDMY,
+} from '@/lib/utils'
 
 type FinanceBoardProps = {
   initialEntries: FinanceEntry[]
@@ -254,8 +259,7 @@ function FinanceCard({ entry, onUpdate, onDelete }: FinanceCardProps) {
         <div>
           <p className='font-semibold capitalize'>{entry.category}</p>
           <p className='text-sm text-gray-500'>
-            {new Date(entry.occurredOn).toLocaleDateString()} ·{' '}
-            {entry.type.toLowerCase()}
+            {formatDateDMY(entry.occurredOn)} · {entry.type.toLowerCase()}
           </p>
           {entry.notes && (
             <p className='text-sm text-gray-500'>{entry.notes}</p>

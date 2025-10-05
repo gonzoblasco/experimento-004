@@ -76,3 +76,44 @@ export function getDateReferences() {
     startOfMonth: getStartOfMonth(),
   };
 }
+
+/**
+ * Formatea una fecha a YYYY-MM-DD de forma determinista (sin depender de locale).
+ */
+export function formatDateYMD(input: string | Date): string {
+  const date = typeof input === "string" ? new Date(input) : input;
+  if (isNaN(date.getTime())) return "";
+  const pad = (n: number) => `${n}`.padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+/**
+ * Formatea una fecha a DD/MM/YYYY de forma determinista.
+ */
+export function formatDateDMY(input: string | Date): string {
+  const date = typeof input === "string" ? new Date(input) : input;
+  if (isNaN(date.getTime())) return "";
+  const pad = (n: number) => `${n}`.padStart(2, "0");
+  return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()}`;
+}
+
+/**
+ * Formatea fecha y hora como "DD Mon, HH:MM" o variantes según opciones.
+ * Por defecto: abreviado en inglés para evitar dependencias del runtime.
+ */
+export function formatDateTime(input: string | Date, options?: { showDate?: boolean; showTime?: boolean }): string {
+  const date = typeof input === "string" ? new Date(input) : input;
+  if (isNaN(date.getTime())) return "";
+  const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const pad = (n: number) => `${n}`.padStart(2, "0");
+  const parts: string[] = [];
+  const showDate = options?.showDate ?? true;
+  const showTime = options?.showTime ?? true;
+  if (showDate) {
+    parts.push(`${pad(date.getDate())} ${monthNames[date.getMonth()]}`);
+  }
+  if (showTime) {
+    parts.push(`${pad(date.getHours())}:${pad(date.getMinutes())}`);
+  }
+  return parts.join(" ");
+}

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import { formatDateTime } from '@/lib/utils'
 
 type ClientOption = {
   id: number
@@ -91,16 +92,11 @@ function AppointmentCard({
           <p className='font-semibold'>{appointment.clientName ?? 'Walk-in'}</p>
           <p className='text-sm text-gray-500'>{appointment.service}</p>
           <p className='text-sm text-gray-500'>
-            {new Date(appointment.start).toLocaleString([], {
-              month: 'short',
-              day: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit',
-            })}
+            {formatDateTime(appointment.start)}
             {' – '}
-            {new Date(appointment.end).toLocaleTimeString([], {
-              hour: '2-digit',
-              minute: '2-digit',
+            {formatDateTime(appointment.end, {
+              showDate: false,
+              showTime: true,
             })}
           </p>
         </div>
