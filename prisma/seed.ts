@@ -7,27 +7,24 @@ async function main() {
   await prisma.appointment.deleteMany();
   await prisma.client.deleteMany();
 
-  await prisma.client.createMany({
-    data: [
-      {
-        name: "Alex Rivera",
-        phone: "555-0102",
-        email: "alex@example.com",
-        notes: "Prefers morning appointments"
-      },
-      {
-        name: "Jordan Kim",
-        phone: "555-0178",
-        email: "jordan@example.com",
-        notes: "Color touch-up every 6 weeks"
-      }
-    ]
+  // Crear clientes individualmente para obtener sus IDs directamente
+  const alex = await prisma.client.create({
+    data: {
+      name: "Alex Rivera",
+      phone: "555-0102",
+      email: "alex@example.com",
+      notes: "Prefers morning appointments"
+    }
   });
 
-  const clientRecords = await prisma.client.findMany();
-
-  const alex = clientRecords.find((client) => client.name === "Alex Rivera");
-  const jordan = clientRecords.find((client) => client.name === "Jordan Kim");
+  const jordan = await prisma.client.create({
+    data: {
+      name: "Jordan Kim",
+      phone: "555-0178",
+      email: "jordan@example.com",
+      notes: "Color touch-up every 6 weeks"
+    }
+  });
 
   const now = new Date();
   const todayMorning = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0);
@@ -40,7 +37,7 @@ async function main() {
         end: new Date(todayMorning.getTime() + 60 * 60 * 1000),
         price: 65,
         status: "SCHEDULED",
-        clientId: alex?.id
+        clientId: alex.id
       },
       {
         service: "Full Color",
@@ -48,7 +45,7 @@ async function main() {
         end: new Date(todayMorning.getTime() + 4 * 60 * 60 * 1000),
         price: 180,
         status: "SCHEDULED",
-        clientId: jordan?.id
+        clientId: jordan.id
       }
     ]
   });

@@ -1,41 +1,11 @@
 import { prisma } from '@/lib/prisma'
 import { Nav } from '@/components/Nav'
+import { FinanceSnapshot, calcTotals, getDateReferences } from '@/lib/utils'
 import Link from 'next/link'
-
-type FinanceSnapshot = {
-  amount: number
-  type: string
-  occurredOn: Date
-}
-
-function calcTotals(entries: FinanceSnapshot[], start: Date) {
-  return entries
-    .filter((entry) => entry.occurredOn >= start)
-    .reduce(
-      (acc, entry) => {
-        if (entry.type === 'INCOME') {
-          acc.income += entry.amount
-        } else {
-          acc.expense += entry.amount
-        }
-        return acc
-      },
-      { income: 0, expense: 0 }
-    )
-}
 
 export default async function DashboardPage() {
   const now = new Date()
-  const startOfToday = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate()
-  )
-  const startOfWeek = new Date(startOfToday)
-  const day = startOfWeek.getDay()
-  const diff = (day + 6) % 7 // start week on Monday
-  startOfWeek.setDate(startOfWeek.getDate() - diff)
-  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+  const { startOfToday, startOfWeek, startOfMonth } = getDateReferences()
 
   const [upcomingAppointments, todaysAppointments, financeEntriesRaw] =
     await Promise.all([
@@ -180,16 +150,16 @@ export default async function DashboardPage() {
           </Link>
         </div>
         <div className='grid grid-cols-1 gap-3 sm:grid-cols-3'>
-          {['daily', 'weekly', 'monthly'].map((period) => (
+          {(['daily', 'weekly', 'monthly'] as const).map((period) => (
             <div key={period} className='rounded-xl border border-gray-100 p-3'>
               <p className='text-xs uppercase text-gray-500'>{period}</p>
               <p className='text-sm text-gray-500'>Income</p>
               <p className='text-lg font-semibold text-primary'>
-                ${totals[period as keyof typeof totals].income.toFixed(2)}
+                ${totals[period].income.toFixed(2)}
               </p>
               <p className='text-sm text-gray-500'>Expenses</p>
               <p className='text-lg font-semibold text-red-500'>
-                ${totals[period as keyof typeof totals].expense.toFixed(2)}
+                ${totals[period].expense.toFixed(2)}
               </p>
             </div>
           ))}

@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { z } from "zod";
+import { Appointment, Client } from "@prisma/client";
 
 type Params = {
   params: {
@@ -7,7 +9,17 @@ type Params = {
   };
 };
 
-function serialize(appointment: any) {
+// Esquema de validación para el cuerpo de la solicitud PUT
+const updateAppointmentSchema = z.object({
+  service: z.string().optional(),
+  start: z.string().datetime().optional(),
+  end: z.string().datetime().optional(),
+  status: z.string().optional(),
+  clientId: z.number().int().optional(),
+  price: z.number().positive().optional()
+});
+
+function serialize(appointment: Appointment & { client: Client | null }) {
   return {
     id: appointment.id,
     service: appointment.service,
@@ -25,29 +37,49 @@ export async function PUT(request: Request, { params }: Params) {
   if (Number.isNaN(id)) {
     return NextResponse.json({ error: "Invalid id" }, { status: 400 });
   }
-  const body = await request.json();
-  const data: Record<string, unknown> = {};
 
-  if (body.service !== undefined) data.service = body.service;
-  if (body.start) data.start = new Date(body.start);
-  if (body.end) data.end = new Date(body.end);
-  if (body.status) data.status = body.status;
-  if (body.clientId !== undefined) data.clientId = body.clientId;
-  if (body.price !== undefined) {
-    const parsedPrice = Number(body.price);
-    if (Number.isNaN(parsedPrice)) {
-      return NextResponse.json({ error: "Invalid price" }, { status: 400 });
+  try {
+    const body = await request.json();
+    
+    // Validar el cuerpo de la solicitud usando Zod
+    const validatedData = updateAppointmentSchema.parse(body);
+    
+    // Preparar los datos para la actualización
+    const data: Record<string, unknown> = {};
+    
+    if (validatedData.service !== undefined) data.service = validatedData.service;
+    if (validatedData.start !== undefined) data.start = new Date(validatedData.start);
+    if (validatedData.end !== undefined) data.end = new Date(validatedData.end);
+    if (validatedData.status !== undefined) data.status = validatedData.status;
+    if (validatedData.clientId !== undefined) data.clientId = validatedData.clientId;
+    if (validatedData.price !== undefined) data.price = validatedData.price;
+
+    const appointment = await prisma.appointment.update({
+      where: { id },
+      data,
+      include: { client: true }
+    });
+
+    return NextResponse.json(serialize(appointment));
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { 
+          error: "Validation error", 
+          details: error.errors.map(err => ({
+            field: err.path.join('.'),
+            message: err.message
+          }))
+        }, 
+        { status: 400 }
+      );
     }
-    data.price = parsedPrice;
+    
+    return NextResponse.json(
+      { error: "Internal server error" }, 
+      { status: 500 }
+    );
   }
-
-  const appointment = await prisma.appointment.update({
-    where: { id },
-    data,
-    include: { client: true }
-  });
-
-  return NextResponse.json(serialize(appointment));
 }
 
 export async function DELETE(request: Request, { params }: Params) {
